@@ -1,42 +1,36 @@
-﻿class Program
+﻿using System.Collections.Generic;
+class Program
 {
     public static void Main()
     {
         Console.Write("Für welche Liste möchtest du das Program ausführen?: ");
         string input = Console.ReadLine()!;
         string path = "\\Data\\Liste" + input + ".txt";
-        List<string> containers = new List<string>();
-        List<int> times = new List<int>();
+        Dictionary<string, bool> containers = new Dictionary<string, bool>();
         string[] content = File.ReadAllLines(Directory.GetCurrentDirectory() + path);
         for (int i = 0; i < content.Length; i++)
         {
             string[] arg = content[i].Split(' ');
-            if (!containers.Contains(arg[0]))
+            if (!containers.ContainsKey(arg[0]))
             {
-                containers.Add(arg[0]);
-                times.Add(0);
+                containers.Add(arg[0], false);
             }
-            if (!containers.Contains(arg[1]))
-            {
-                containers.Add(arg[1]);
-                times.Add(1);
-            }
-            else
-            {
-                int index = containers.IndexOf(arg[1]);
-                times[index] += 1;
-            }
-        }
-        for (int i = 0; i < containers.Count; i++)
-        {
-            Console.WriteLine("Container: " + containers[i] + "; auf der rechten Seite: " + times[i]);
+            containers[arg[1]] = true;
         }
         int zeros = 0;
-        for (int i = 0; i < containers.Count; i++)
+        string heaviest = "";
+        foreach (string container in containers.Keys)
         {
-            if (times[i] == 0)
+            Console.WriteLine("Container: " + container + "; war auf der rechten Seite: " + containers[container]);
+            if (!containers[container])
             {
+                heaviest = container;
                 zeros++;
+                if (zeros > 1)
+                {
+                    Console.WriteLine("Es konnte keine Lösung gefunden werden");
+                    break;
+                }
             }
         }
         if (zeros == 0)
@@ -45,12 +39,7 @@
         }
         else if (zeros == 1)
         {
-            int index = times.IndexOf(0);
-            Console.WriteLine("Der Container mit der Nummer: " + containers[index] + " ist der größte");
-        }
-        else
-        {
-            Console.WriteLine("Es lässt sich keine Aussage über den größten Container treffen");
+            Console.WriteLine("Der schwerste Container ist: " + heaviest);
         }
     }
 }
