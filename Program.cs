@@ -21,7 +21,6 @@ class Program
         string heaviest = "";
         foreach (string container in containers.Keys)
         {
-            Console.WriteLine("Container: " + container + "; war auf der rechten Seite: " + containers[container]);
             if (!containers[container])
             {
                 heaviest = container;
